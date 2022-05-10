@@ -1,0 +1,35 @@
+{
+  "variants": {
+    "facing=east,on=false": {
+      "model": "rpgmod:block/computer",
+      "y": 90
+    },
+    "facing=east,on=true": {
+      "model": "rpgmod:block/computer_on",
+      "y": 90
+    },
+    "facing=north,on=false": {
+      "model": "rpgmod:block/computer"
+    },
+    "facing=north,on=true": {
+      "model": "rpgmod:block/computer_on"
+    },
+    "facing=south,on=false": {
+      "model": "rpgmod:block/computer",
+      "y": 180
+    },
+    "facing=south,on=true": {
+      "model": "rpgmod:block/computer_on",
+      "y": 180
+    },
+    "facing=west,on=false": {
+      "model": "rpgmod:block/computer",
+      "y": 270
+    },
+    "facing=west,on=true": {
+      "model": "rpgmod:block/computer_on",
+      "y": 270
+    }
+  }
+}
+

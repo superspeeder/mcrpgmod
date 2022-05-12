@@ -3,6 +3,7 @@ package org.delusion.rpgmod.character;
 import com.google.gson.Gson;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.nbt.NbtCompound;
@@ -11,6 +12,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.PersistentState;
 import net.minecraft.world.World;
@@ -29,6 +31,38 @@ public class CharacterStats  {
             new Identifier("rpgmod", "character_stats.response_packet_id");
     public static final Identifier REQUEST_PACKET_ID =
             new Identifier("rpgmod", "character_stats.request_packet_id");
+
+    public static void resetUserStats(UUID uuid) {
+        CharacterStats statsFor = getStatsFor(uuid);
+        statsFor.reset(uuid);
+    }
+
+    public void setUserStatsAndSend(UUID uuid, CharacterStatType type, int value) {
+        if (RPGMod.server != null) {
+            setStatistic(type, value);
+            ServerPlayerEntity plr = RPGMod.server.getPlayerManager().getPlayer(uuid);
+            if (plr != null) {
+                PacketByteBuf buf = PacketByteBufs.create();
+
+                buf.writeString(RPGMod.GSON.toJson(new Storage(getStatsFor(uuid).statValues)));
+                ServerPlayNetworking.send(plr, RESPONSE_PACKET_ID, buf);
+            }
+        }
+    }
+
+    private void reset(UUID uuid) {
+        if (RPGMod.server != null) {
+            statValues.keySet().forEach(characterStatType -> setStatistic(characterStatType, characterStatType.defaultValue()));
+
+            ServerPlayerEntity plr = RPGMod.server.getPlayerManager().getPlayer(uuid);
+            if (plr != null) {
+                PacketByteBuf buf = PacketByteBufs.create();
+
+                buf.writeString(RPGMod.GSON.toJson(new Storage(getStatsFor(uuid).statValues)));
+                ServerPlayNetworking.send(plr, RESPONSE_PACKET_ID, buf);
+            }
+        }
+    }
 
 
     public static class Loader extends PersistentState {
@@ -100,7 +134,12 @@ public class CharacterStats  {
         private Map<Identifier, Integer> statValues = new HashMap<>();
 
         public Storage(Map<CharacterStatType, Integer> map) {
-            map.forEach((characterStatType, o) -> statValues.put(characterStatType.getInternalName(), o));
+            map.forEach((characterStatType, o) -> {
+                if (characterStatType != null) statValues.put(characterStatType.getInternalName(), o);
+                else {
+                    RPGMod.LOGGER.warn("encountered a null stat type, skipping");
+                }
+            });
         }
     }
 
@@ -117,6 +156,7 @@ public class CharacterStats  {
     }
 
     public void setStatistic(CharacterStatType stat, int value) {
+        if (stat == null) return;
         statValues.put(stat, value);
         persistantStateLoader.setDirty(true);
     }
@@ -157,5 +197,6 @@ public class CharacterStats  {
         String json = packetByteBuf.readString();
         RPGModClient.setCharacterStats(new CharacterStats(RPGMod.GSON.fromJson(json, CharacterStats.Storage.class)));
         RPGMod.LOGGER.info("Received Character Stats for {}", minecraftClient.player.getGameProfile().getName());
+        minecraftClient.player.sendMessage(Text.of("You currently have " + RPGModClient.getCharacterStats().getStatistic(CharacterStatTypes.EXPERIENCE) + " experience"), false);
     }
 }

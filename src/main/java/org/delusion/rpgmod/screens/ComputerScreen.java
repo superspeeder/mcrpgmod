@@ -201,7 +201,7 @@ public class ComputerScreen extends Screen {
 
             if (mrx >= 0 && mrx < 18 && mry >= 0 && mry < 18) {
                 List<Text> text = List.of(stype.getDisplayName().copy().formatted(Formatting.GOLD, Formatting.BOLD).append(Text.of(": ")).append(
-                        Text.of(String.valueOf(RPGModClient.getCharacterStats().getStatistic(CLICKSTAT))).copy()
+                        Text.of(String.valueOf(RPGModClient.getCharacterStats().getStatistic(stype))).copy()
                                 .setStyle(Style.EMPTY.withColor(TextColor.fromFormatting(Formatting.WHITE)).withItalic(true).withBold(false)
                                 )));
                 postRun = () -> renderTooltip(matrices, text, mouseX, mouseY);

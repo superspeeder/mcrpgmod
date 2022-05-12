@@ -38,6 +38,10 @@ public class CharacterStatType {
         return statTypes.values();
     }
 
+    public static boolean exists(Identifier type) {
+        return statTypes.containsKey(type);
+    }
+
     static class RegistryStorage {
         Map<Identifier, CharacterStatType> statTypes = new HashMap<>();
 
@@ -62,9 +66,6 @@ public class CharacterStatType {
         RPGMod.LOGGER.info(jsondata);
         RegistryStorage storage = RPGMod.GSON.fromJson(jsondata, RegistryStorage.class);
         statTypes.putAll(storage.statTypes);
-        storage.statTypes.forEach((identifier, characterStatType) -> {
-            
-        });
     }
 
     @Override

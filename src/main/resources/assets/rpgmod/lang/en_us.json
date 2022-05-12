@@ -4,5 +4,12 @@
   "block.rpgmod.computer": "Computer",
   "itemGroup.rpgmod.general": "RPG Mod: General",
   "tooltip.rpgmod.gui.computer.button.stats": "Character Stats",
-  "rpgmod.character.stats.type.computer.buttonclick": "Button Clicks"
+  "rpgmod.character.stats.type.computer.buttonclick": "Button Clicks",
+  "rpgmod.character.stats.type.experience": "Experience",
+  "rpgmod.character.stats.type.strength": "Strength",
+  "rpgmod.character.stats.type.constitution": "Constitution",
+  "rpgmod.character.stats.type.dexterity": "Dexterity",
+  "rpgmod.character.stats.type.intelligence": "Intelligence",
+  "rpgmod.character.stats.type.wisdom": "Wisdom",
+  "rpgmod.character.stats.type.charisma": "Charisma"
 }

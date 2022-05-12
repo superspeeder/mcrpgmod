@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -25,6 +26,7 @@ import net.minecraft.util.registry.Registry;
 import org.delusion.rpgmod.blocks.Computer;
 import org.delusion.rpgmod.character.CharacterStatType;
 import org.delusion.rpgmod.character.CharacterStats;
+import org.delusion.rpgmod.commands.CharacterCommand;
 import org.delusion.rpgmod.screens.ComputerScreen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +63,10 @@ public class RPGMod implements ModInitializer {
 		ServerLifecycleEvents.SERVER_STARTING.register(this::onServerStarting);
 		ServerPlayConnectionEvents.JOIN.register(this::onClientJoin);
 
+		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
+			CharacterCommand.register(dispatcher);
+		});
+
 	}
 
 	private void onClientJoin(ServerPlayNetworkHandler serverPlayNetworkHandler, PacketSender packetSender, MinecraftServer minecraftServer) {
@@ -68,6 +74,11 @@ public class RPGMod implements ModInitializer {
 	}
 
 	private void onServerStarting(MinecraftServer minecraftServer) {
+		try {
+			RPGMod.class.getClassLoader().loadClass("org.delusion.rpgmod.character.CharacterStatTypes");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 		server = minecraftServer;
 		CharacterStatType.setOnServer(true);
 		ServerPlayNetworking.registerGlobalReceiver(CharacterStats.REQUEST_PACKET_ID, CharacterStats::onRequest);

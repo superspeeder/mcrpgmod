@@ -1,0 +1,8 @@
+{
+  "item.rpgmod.custom_item": "Custom Item",
+  "block.rpgmod.metal_block": "Metal Block",
+  "block.rpgmod.computer": "Computer",
+  "itemGroup.rpgmod.general": "RPG Mod: General",
+  "tooltip.rpgmod.gui.computer.button.stats": "Character Stats",
+  "rpgmod.character.stats.type.computer.buttonclick": "Button Clicks"
+}

@@ -1,9 +1,12 @@
 package org.delusion.rpgmod.blocks;
 
+import net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
@@ -15,10 +18,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import org.delusion.rpgmod.blockentities.ComputerBlockEntity;
+import org.delusion.rpgmod.screens.ComputerScreen;
 import org.jetbrains.annotations.Nullable;
 
-public class Computer extends BlockWithEntity {
+public class Computer extends Block {
     public static final BooleanProperty ON = BooleanProperty.of("on");
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
@@ -41,7 +44,7 @@ public class Computer extends BlockWithEntity {
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return (BlockState)this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
+        return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
     }
 
     @Override
@@ -51,19 +54,14 @@ public class Computer extends BlockWithEntity {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-
-        world.setBlockState(pos, state.with(ON, !state.get(ON)));
+        if (world.isClient()) {
+            MinecraftClient.getInstance().setScreenAndRender(new ComputerScreen(getName()));
+        }
 
         return ActionResult.SUCCESS;
     }
 
 
-
-    @Nullable
-    @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return ComputerBlockEntity.TYPE_INSTANCE.instantiate(pos, state);
-    }
 
     @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {

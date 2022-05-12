@@ -1,0 +1,28 @@
+# TODO List
+- [ ] networked `CharacterStatType` registry
+  - [ ] on join, server sends all registered types to client
+  - [ ] on register, server sends to all connected clients
+- [ ] e
+- [ ] e
+- [ ] e
+- [ ] e
+- [ ] e
+- [ ] e
+- [ ] e
+- [ ] e
+- [ ] e
+- [ ] e
+- [ ] e
+- [ ] e
+- [ ] e
+- [ ] e
+- [ ] e
+- [ ] e
+- [ ] e
+- [ ] e
+- [ ] e
+- [ ] e
+- [ ] e
+- [ ] e
+- [ ] e
+- [ ] e

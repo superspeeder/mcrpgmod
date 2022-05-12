@@ -8,12 +8,15 @@
   "authors": [
     "Me!"
   ],
-  "license": "CC0-1.0",
+  "license": "MIT",
 
   "environment": "*",
   "entrypoints": {
     "main": [
       "org.delusion.rpgmod.RPGMod"
+    ],
+    "client": [
+      "org.delusion.rpgmod.RPGModClient"
     ]
   },
   "mixins": [
